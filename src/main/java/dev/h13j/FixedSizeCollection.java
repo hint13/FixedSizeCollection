@@ -3,6 +3,7 @@ package dev.h13j;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
+import java.util.function.Predicate;
 
 public class FixedSizeCollection<E> implements Collection<E> {
 
@@ -148,6 +149,25 @@ public class FixedSizeCollection<E> implements Collection<E> {
             if (c.contains(iterator.next())) {
                 iterator.remove();
                 isAnyRemoved = true;
+            }
+        }
+        return isAnyRemoved;
+    }
+
+    @Override
+    public boolean removeIf(Predicate<? super E> filter) {
+        Objects.requireNonNull(filter);
+        FixedSizeCollectionIterator<E> iterator = new FixedSizeCollectionIterator<>();
+        boolean isAnyRemoved = false;
+        while (iterator.hasNext()) {
+            E e = iterator.next();
+            try {
+                if (filter.test(e)) { // can raise exception with null-value element
+                    iterator.remove();
+                    isAnyRemoved = true;
+                }
+            } catch (Exception ignored) {
+                iterator.remove();
             }
         }
         return isAnyRemoved;

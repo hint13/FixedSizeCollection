@@ -250,4 +250,27 @@ class FixedSizeCollectionTest {
         assertThat(collection).hasSize(3)
                 .containsExactlyInAnyOrder("a", "b", "c");
     }
+
+    @Test
+    void whenRemoveIfEven_thenElementsRemoved() {
+        var collection = new FixedSizeCollection<Integer>(10);
+        collection.addAll(List.of(1, 2, 3, 4, 5));
+        collection.add(null);
+        collection.addAll(List.of(7, 8, 9, 10));
+
+        assertThat(collection.removeIf((e) -> e % 2 == 0)).isTrue();
+        assertThat(collection).hasSize(5)
+                .containsExactlyInAnyOrder(1, 3, 5, 7, 9);
+    }
+
+    @SuppressWarnings("DataFlowIssue")
+    @Test
+    void whenRemoveIfHasNullFilter_thenRaiseException() {
+        var collection = new FixedSizeCollection<Integer>(10);
+        collection.addAll(List.of(1, 2, 3, 4, 5));
+        collection.add(null);
+        collection.addAll(List.of(7, 8, 9, 10));
+        assertThatExceptionOfType(NullPointerException.class)
+                .isThrownBy(() -> collection.removeIf(null));
+    }
 }
