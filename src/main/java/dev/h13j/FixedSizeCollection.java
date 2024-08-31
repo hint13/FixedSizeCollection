@@ -103,15 +103,14 @@ public class FixedSizeCollection<E> implements Collection<E> {
         FixedSizeCollectionIterator<E> iterator = new FixedSizeCollectionIterator<>();
         boolean isAnyRemoved = false;
         while (iterator.hasNext()) {
-            iterator.next();
-            int i = iterator.index();
+            E element = iterator.next();
             if (o == null) {
-                if (elements[i] == null) {
+                if (element == null) {
                     iterator.remove();
                     isAnyRemoved = true;
                 }
             } else {
-                if (o.equals(elements[i])) {
+                if (o.equals(element)) {
                     iterator.remove();
                     isAnyRemoved = true;
                 }
@@ -237,9 +236,6 @@ public class FixedSizeCollection<E> implements Collection<E> {
             return res;
         }
 
-        int index() {
-            return i;
-        }
     }
 
 }
